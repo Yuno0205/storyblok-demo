@@ -4,6 +4,7 @@ import Page from "@/app/components/Page";
 import Teaser from "@/app/components/Teaser";
 import HeroSection from "@/app/components/HeroSection";
 import { apiPlugin, storyblokInit } from "@storyblok/react/rsc";
+import Button from "@/app/components/Button";
 
 export const getStoryblokApi = storyblokInit({
   accessToken: process.env.NEXT_PUBLIC_STORYBLOK_CONTENT_API_ACCESS_TOKEN,
@@ -20,6 +21,7 @@ export const getStoryblokApi = storyblokInit({
     "newsletter-form-section": Page,
     "featured-articles-section": Page,
     "banner-reference": Page,
+    button: Button,
   },
   apiOptions: {
     region: "eu",

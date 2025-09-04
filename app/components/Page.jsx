@@ -4,8 +4,6 @@ import {
 } from "@storyblok/react/rsc";
 
 export default function Page({ blok }) {
-  console.log("Page component received blok:", blok);
-
   return (
     <main>
       {blok.body?.map((nestedBlok) => (
