@@ -19,7 +19,7 @@ export const getStoryblokApi = storyblokInit({
     "grid-section": Page,
     "image-text-section": Page,
     "newsletter-form-section": Page,
-    "featured-articles-section": Page,
+    "featured-articles-section": Feature,
     "banner-reference": Page,
     button: Button,
   },
