@@ -1,19 +1,24 @@
-// components/Button.jsx
+// app/components/Button.tsx
 import Link from "next/link";
-import { storyblokEditable } from "@storyblok/react";
+import { storyblokEditable } from "@storyblok/react/rsc";
+import type { Button } from "../../.storyblok/types/286835241802704/storyblok-components.d.ts";
 
-// Tạo một map để chuyển đổi giá trị từ Storyblok sang class Tailwind
-// Cách này an toàn hơn, tránh việc tạo class động một cách không kiểm soát
+// --- BẮT ĐẦU CẬP NHẬT ---
+
+// 1. Mở rộng colorMap để xử lý nhiều trường hợp hơn
 const colorMap = {
+  // Màu dùng cho background
+  white: { bg: "bg-white", text: "text-white", border: "border-gray-300" },
   blue: { bg: "bg-blue-600", text: "text-blue-600", border: "border-blue-600" },
   green: {
     bg: "bg-green-500",
     text: "text-green-500",
     border: "border-green-500",
   },
-  white: { text: "text-white" },
+
+  // Màu dùng cho text
+  "primary-dark": { text: "text-gray-800" }, // Định nghĩa cho "primary-dark"
   black: { text: "text-black" },
-  // Thêm các màu khác bạn định nghĩa trong Storyblok
 };
 
 const sizeMap = {
@@ -22,29 +27,40 @@ const sizeMap = {
   large: "py-3 px-6 text-lg",
 };
 
-const Button = ({ blok }) => {
-  // Lấy ra các giá trị, có thể có giá trị mặc định
-  const style = blok.style || "solid";
-  const bgColor = colorMap[blok.background_color] || colorMap.blue;
-  const textColor = colorMap[blok.text_color] || colorMap.white;
+const Button = ({ blok }: { blok: Button }) => {
+  // Lấy ra các giá trị, có giá trị mặc định an toàn
+  const style = blok.style || "default";
+  const bgColorName = blok.background_color || "blue"; // Mặc định là 'blue' nếu không có
+  const textColorName = blok.text_color || "white"; // Mặc định là 'white' nếu không có
+
+  const bgColor = colorMap[bgColorName];
+  const textColor = colorMap[textColorName];
   const sizeClass = sizeMap[blok.size] || sizeMap.medium;
 
   let styleClasses = "";
-  if (style === "outline") {
+
+  // 2. Logic cho từng style của button
+  if (style === "ghost") {
+    // Button "ma" (chỉ có text và viền)
     styleClasses = `border-2 ${bgColor.border} ${bgColor.text} hover:bg-opacity-10`;
   } else {
-    // Mặc định là 'solid'
+    // Mặc định là "default" (nền đặc)
     styleClasses = `${bgColor.bg} ${textColor.text} hover:opacity-90`;
+
+    // 3. Thêm logic: nếu nền trắng, thêm viền để không bị chìm
+    if (bgColorName === "white") {
+      styleClasses += ` border ${bgColor.border}`;
+    }
   }
 
-  const className = `font-bold rounded-lg transition ${sizeClass} ${styleClasses}`;
+  const className = `font-bold rounded-lg transition-colors inline-block ${sizeClass} ${styleClasses}`;
+
+  // --- KẾT THÚC CẬP NHẬT ---
 
   return (
-    <Link href={blok.link?.cached_url || "/"}>
-      <a {...storyblokEditable(blok)} className={className}>
-        {blok.label}
-      </a>
-    </Link>
+    <div {...storyblokEditable(blok)} className={className}>
+      <Link href={blok.link?.cached_url || "/"}>{blok.label}</Link>
+    </div>
   );
 };
 
